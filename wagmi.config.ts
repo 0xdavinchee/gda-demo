@@ -9,11 +9,11 @@ import SuperTokenPoolBuild from "./abis/SuperTokenPool.json";
 export default defineConfig({
   out: "src/generated.ts",
   contracts: [
-    { name: "GDAv1", abi: GeneralDistributionAgreementV1Build.abi },
-    { name: "SuperToken", abi: SuperTokenBuild.abi },
-    { name: "Superfluid", abi: SuperfluidBuild.abi },
-    { name: "SETHProxy", abi: SETHProxyBuild.abi },
-    { name: "SuperTokenPool", abi: SuperTokenPoolBuild.abi },
+    { name: "GDAv1", abi: GeneralDistributionAgreementV1Build.abi as any },
+    { name: "SuperToken", abi: SuperTokenBuild.abi as any },
+    { name: "Superfluid", abi: SuperfluidBuild.abi as any },
+    { name: "SETHProxy", abi: SETHProxyBuild.abi as any },
+    { name: "SuperTokenPool", abi: SuperTokenPoolBuild.abi as any },
   ],
   plugins: [react()],
 });

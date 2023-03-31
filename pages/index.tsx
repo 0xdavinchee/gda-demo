@@ -22,7 +22,6 @@ import {
   useSuperTokenSymbol,
 } from "../src/generated";
 import { BigNumber, ethers } from "ethers";
-import { IGeneralDistributionAgreementV1__factory } from "../typechain-types";
 import FlowingBalance from "../component/FlowingBalance";
 import {
   Card,
@@ -33,6 +32,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useMemo } from "react";
+import { Interface } from "@ethersproject/abi";
 
 const superTokenContract = {
   superTokenABI,
@@ -51,8 +51,9 @@ const poolContract = {
   address: "0x7E3466bbcc8E055c4030Cb2616aD25DB30063E61" as any,
 };
 
-const GDA_INTERFACE =
-  IGeneralDistributionAgreementV1__factory.createInterface();
+const GDA_INTERFACE = new Interface([
+  "function connectPool(address,bool,bytes calldata) returns(bytes memory)"
+]);
 const connectPoolCalldata = GDA_INTERFACE.encodeFunctionData(
   "connectPool",
   [poolContract.address, true, "0x"]
