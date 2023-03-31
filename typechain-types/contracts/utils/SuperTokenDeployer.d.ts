@@ -1,0 +1,130 @@
+import type { BaseContract, BigNumber, BigNumberish, BytesLike, CallOverrides, ContractTransaction, Overrides, PopulatedTransaction, Signer, utils } from "ethers";
+import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent, PromiseOrValue } from "../../common";
+export interface SuperTokenDeployerInterface extends utils.Interface {
+    functions: {
+        "RESOLVER_BASE_SUPER_TOKEN_KEY()": FunctionFragment;
+        "RESOLVER_BASE_TOKEN_KEY()": FunctionFragment;
+        "deployNativeAssetSuperToken(string,string)": FunctionFragment;
+        "deployPureSuperToken(string,string,uint256)": FunctionFragment;
+        "deployWrapperSuperToken(string,string,uint8,uint256)": FunctionFragment;
+        "transferOwnership(address)": FunctionFragment;
+    };
+    getFunction(nameOrSignatureOrTopic: "RESOLVER_BASE_SUPER_TOKEN_KEY" | "RESOLVER_BASE_TOKEN_KEY" | "deployNativeAssetSuperToken" | "deployPureSuperToken" | "deployWrapperSuperToken" | "transferOwnership"): FunctionFragment;
+    encodeFunctionData(functionFragment: "RESOLVER_BASE_SUPER_TOKEN_KEY", values?: undefined): string;
+    encodeFunctionData(functionFragment: "RESOLVER_BASE_TOKEN_KEY", values?: undefined): string;
+    encodeFunctionData(functionFragment: "deployNativeAssetSuperToken", values: [PromiseOrValue<string>, PromiseOrValue<string>]): string;
+    encodeFunctionData(functionFragment: "deployPureSuperToken", values: [
+        PromiseOrValue<string>,
+        PromiseOrValue<string>,
+        PromiseOrValue<BigNumberish>
+    ]): string;
+    encodeFunctionData(functionFragment: "deployWrapperSuperToken", values: [
+        PromiseOrValue<string>,
+        PromiseOrValue<string>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+    ]): string;
+    encodeFunctionData(functionFragment: "transferOwnership", values: [PromiseOrValue<string>]): string;
+    decodeFunctionResult(functionFragment: "RESOLVER_BASE_SUPER_TOKEN_KEY", data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: "RESOLVER_BASE_TOKEN_KEY", data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: "deployNativeAssetSuperToken", data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: "deployPureSuperToken", data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: "deployWrapperSuperToken", data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: "transferOwnership", data: BytesLike): Result;
+    events: {};
+}
+export interface SuperTokenDeployer extends BaseContract {
+    connect(signerOrProvider: Signer | Provider | string): this;
+    attach(addressOrName: string): this;
+    deployed(): Promise<this>;
+    interface: SuperTokenDeployerInterface;
+    queryFilter<TEvent extends TypedEvent>(event: TypedEventFilter<TEvent>, fromBlockOrBlockhash?: string | number | undefined, toBlock?: string | number | undefined): Promise<Array<TEvent>>;
+    listeners<TEvent extends TypedEvent>(eventFilter?: TypedEventFilter<TEvent>): Array<TypedListener<TEvent>>;
+    listeners(eventName?: string): Array<Listener>;
+    removeAllListeners<TEvent extends TypedEvent>(eventFilter: TypedEventFilter<TEvent>): this;
+    removeAllListeners(eventName?: string): this;
+    off: OnEvent<this>;
+    on: OnEvent<this>;
+    once: OnEvent<this>;
+    removeListener: OnEvent<this>;
+    functions: {
+        RESOLVER_BASE_SUPER_TOKEN_KEY(overrides?: CallOverrides): Promise<[string]>;
+        RESOLVER_BASE_TOKEN_KEY(overrides?: CallOverrides): Promise<[string]>;
+        deployNativeAssetSuperToken(_name: PromiseOrValue<string>, _symbol: PromiseOrValue<string>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<ContractTransaction>;
+        deployPureSuperToken(_name: PromiseOrValue<string>, _symbol: PromiseOrValue<string>, _initialSupply: PromiseOrValue<BigNumberish>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<ContractTransaction>;
+        deployWrapperSuperToken(_underlyingName: PromiseOrValue<string>, _underlyingSymbol: PromiseOrValue<string>, _decimals: PromiseOrValue<BigNumberish>, _mintLimit: PromiseOrValue<BigNumberish>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<ContractTransaction>;
+        transferOwnership(newOwner: PromiseOrValue<string>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<ContractTransaction>;
+    };
+    RESOLVER_BASE_SUPER_TOKEN_KEY(overrides?: CallOverrides): Promise<string>;
+    RESOLVER_BASE_TOKEN_KEY(overrides?: CallOverrides): Promise<string>;
+    deployNativeAssetSuperToken(_name: PromiseOrValue<string>, _symbol: PromiseOrValue<string>, overrides?: Overrides & {
+        from?: PromiseOrValue<string>;
+    }): Promise<ContractTransaction>;
+    deployPureSuperToken(_name: PromiseOrValue<string>, _symbol: PromiseOrValue<string>, _initialSupply: PromiseOrValue<BigNumberish>, overrides?: Overrides & {
+        from?: PromiseOrValue<string>;
+    }): Promise<ContractTransaction>;
+    deployWrapperSuperToken(_underlyingName: PromiseOrValue<string>, _underlyingSymbol: PromiseOrValue<string>, _decimals: PromiseOrValue<BigNumberish>, _mintLimit: PromiseOrValue<BigNumberish>, overrides?: Overrides & {
+        from?: PromiseOrValue<string>;
+    }): Promise<ContractTransaction>;
+    transferOwnership(newOwner: PromiseOrValue<string>, overrides?: Overrides & {
+        from?: PromiseOrValue<string>;
+    }): Promise<ContractTransaction>;
+    callStatic: {
+        RESOLVER_BASE_SUPER_TOKEN_KEY(overrides?: CallOverrides): Promise<string>;
+        RESOLVER_BASE_TOKEN_KEY(overrides?: CallOverrides): Promise<string>;
+        deployNativeAssetSuperToken(_name: PromiseOrValue<string>, _symbol: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>;
+        deployPureSuperToken(_name: PromiseOrValue<string>, _symbol: PromiseOrValue<string>, _initialSupply: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+        deployWrapperSuperToken(_underlyingName: PromiseOrValue<string>, _underlyingSymbol: PromiseOrValue<string>, _decimals: PromiseOrValue<BigNumberish>, _mintLimit: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[
+            string,
+            string
+        ] & {
+            underlyingToken: string;
+            superToken: string;
+        }>;
+        transferOwnership(newOwner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+    };
+    filters: {};
+    estimateGas: {
+        RESOLVER_BASE_SUPER_TOKEN_KEY(overrides?: CallOverrides): Promise<BigNumber>;
+        RESOLVER_BASE_TOKEN_KEY(overrides?: CallOverrides): Promise<BigNumber>;
+        deployNativeAssetSuperToken(_name: PromiseOrValue<string>, _symbol: PromiseOrValue<string>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<BigNumber>;
+        deployPureSuperToken(_name: PromiseOrValue<string>, _symbol: PromiseOrValue<string>, _initialSupply: PromiseOrValue<BigNumberish>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<BigNumber>;
+        deployWrapperSuperToken(_underlyingName: PromiseOrValue<string>, _underlyingSymbol: PromiseOrValue<string>, _decimals: PromiseOrValue<BigNumberish>, _mintLimit: PromiseOrValue<BigNumberish>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<BigNumber>;
+        transferOwnership(newOwner: PromiseOrValue<string>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<BigNumber>;
+    };
+    populateTransaction: {
+        RESOLVER_BASE_SUPER_TOKEN_KEY(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+        RESOLVER_BASE_TOKEN_KEY(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+        deployNativeAssetSuperToken(_name: PromiseOrValue<string>, _symbol: PromiseOrValue<string>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<PopulatedTransaction>;
+        deployPureSuperToken(_name: PromiseOrValue<string>, _symbol: PromiseOrValue<string>, _initialSupply: PromiseOrValue<BigNumberish>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<PopulatedTransaction>;
+        deployWrapperSuperToken(_underlyingName: PromiseOrValue<string>, _underlyingSymbol: PromiseOrValue<string>, _decimals: PromiseOrValue<BigNumberish>, _mintLimit: PromiseOrValue<BigNumberish>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<PopulatedTransaction>;
+        transferOwnership(newOwner: PromiseOrValue<string>, overrides?: Overrides & {
+            from?: PromiseOrValue<string>;
+        }): Promise<PopulatedTransaction>;
+    };
+}
+//# sourceMappingURL=SuperTokenDeployer.d.ts.map

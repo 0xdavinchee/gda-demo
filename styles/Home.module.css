@@ -93,6 +93,11 @@
   font-size: 1.2rem;
   line-height: 1.5;
 }
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
 
 @media (max-width: 600px) {
   .grid {

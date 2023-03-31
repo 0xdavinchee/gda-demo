@@ -1,10 +1,12 @@
 import '../styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
+import { ThemeProvider } from '@mui/material/styles';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import type { AppProps } from 'next/app';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { arbitrum, goerli, mainnet, optimism, polygon } from 'wagmi/chains';
+import { arbitrum, foundry, goerli, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import theme from '../src/theme';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
@@ -12,13 +14,15 @@ const { chains, provider, webSocketProvider } = configureChains(
     polygon,
     optimism,
     arbitrum,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [goerli] : []),
+    foundry,
+    goerli,
+    polygonMumbai
   ],
   [publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'RainbowKit App',
+  appName: 'GDA Demo',
   chains,
 });
 
@@ -32,9 +36,11 @@ const wagmiClient = createClient({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
-        <Component {...pageProps} />
-      </RainbowKitProvider>
+      <ThemeProvider theme={theme}>
+        <RainbowKitProvider chains={chains}>
+          <Component {...pageProps} />
+        </RainbowKitProvider>
+      </ThemeProvider>
     </WagmiConfig>
   );
 }
