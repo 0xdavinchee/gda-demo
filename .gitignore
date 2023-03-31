@@ -38,4 +38,3 @@ yarn-error.log*
 *.tsbuildinfo
 
 # wagmi generated
-src/generated.ts
