@@ -1,10 +1,10 @@
 import { defineConfig } from "@wagmi/cli";
 import { react } from "@wagmi/cli/plugins";
-import GeneralDistributionAgreementV1Build from "./abis/GeneralDistributionAgreementV1.json";
-import SuperTokenBuild from "./abis/SuperToken.json";
-import SuperfluidBuild from "./abis/Superfluid.json";
-import SETHProxyBuild from "./abis/SETHProxy.json";
-import SuperTokenPoolBuild from "./abis/SuperTokenPool.json";
+import GeneralDistributionAgreementV1Build from "./abis/IGeneralDistributionAgreementV1.json";
+import SuperTokenBuild from "./abis/ISuperToken.json";
+import SuperfluidBuild from "./abis/ISuperfluid.json";
+import SETHProxyBuild from "./abis/ISETH.json";
+import SuperTokenPoolBuild from "./abis/ISuperTokenPool.json";
 
 export default defineConfig({
   out: "src/generated.ts",
