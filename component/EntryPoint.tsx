@@ -8,7 +8,7 @@ import {
   InputLabel,
   Select,
 } from "@mui/material";
-import TabPanel from "../component/TabPanel";
+import TabPanel from "./TabPanel";
 import { useEffect, useState } from "react";
 import {
   gdAv1ABI,
@@ -163,7 +163,7 @@ const EntryPoint = (props: EntryPointProps) => {
       </TabPanel>
       <TabPanel value={tab} index={2}>
         {existingPools.length === 0 && (
-          <Typography>You don't have any pools saved currently.</Typography>
+          <Typography>You don&apos;t have any pools saved currently.</Typography>
         )}
         {existingPools.length > 0 && (
           <>

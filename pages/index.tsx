@@ -30,7 +30,7 @@ import {
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { Interface } from "@ethersproject/abi";
-import EntryPoint from "./EntryPoint";
+import EntryPoint from "../component/EntryPoint";
 import TabPanel from "../component/TabPanel";
 import { gdaContract } from "../src/constants";
 import PoolInfoCard from "../component/PoolInfo";
@@ -74,7 +74,6 @@ const Home: NextPage = () => {
   const [distributionAmount, setDistributionAmount] = useState("");
   const [distributionFlowRate, setDistributionFlowRate] = useState("");
 
-  // useEffect if existingPools.length > 0, setEntryPoint to SelectPool
   const [currentPool, setCurrentPool] = useState("");
 
   const poolContract = {
@@ -258,7 +257,7 @@ const Home: NextPage = () => {
 
         {currentPool === "" && (
           <EntryPoint
-            existingPools={existingPools}
+            existingPools={existingPools || []}
             currentPool={currentPool}
             setCurrentPool={(x) => setCurrentPool(x)}
           />
