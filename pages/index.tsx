@@ -28,12 +28,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Interface } from "@ethersproject/abi";
 import EntryPoint from "../component/EntryPoint";
 import TabPanel from "../component/TabPanel";
 import { gdaContract } from "../src/constants";
 import PoolInfoCard from "../component/PoolInfo";
+
+enum LocalStorage {
+  ExistingPools = "existingPools",
+}
 
 enum TabType {
   Admin,
@@ -64,11 +68,7 @@ const tryCatchWrapper = async (func?: () => any) => {
 const Home: NextPage = () => {
   const { address } = useAccount();
   const [tab, setTab] = useState(TabType.Distributor);
-  const [existingPools, setExistingPools] = useState<string[]>([
-    "0xfbd3363e2fc4db7ce069dd422a54cc5c5eaca9b7",
-    "0xfajdj",
-    "0xjllas",
-  ]);
+  const [existingPools, setExistingPools] = useState<string[]>([]);
   const [memberAddress, setMemberAddress] = useState("");
   const [memberUnits, setMemberUnits] = useState("");
   const [distributionAmount, setDistributionAmount] = useState("");
@@ -84,8 +84,21 @@ const Home: NextPage = () => {
   // HOOKS
   // REACT HOOKS
   useEffect(() => {
+    const localStorageExistingPools = localStorage.getItem(
+      LocalStorage.ExistingPools
+    );
+    if (localStorageExistingPools) {
+      setExistingPools(JSON.parse(localStorageExistingPools));
+    }
+  }, []);
+
+  useEffect(() => {
     if (!existingPools.includes(currentPool)) {
       setExistingPools([...existingPools, currentPool]);
+      localStorage.setItem(
+        LocalStorage.ExistingPools,
+        JSON.stringify(existingPools)
+      );
     }
   }, [currentPool, existingPools]);
 
@@ -104,8 +117,6 @@ const Home: NextPage = () => {
     ...poolContract,
     enabled: ethers.utils.isAddress(currentPool),
   });
-
-  const isAdmin = useMemo(() => address === poolAdmin, [address, poolAdmin]);
 
   const {
     data: isMemberConnected,
@@ -365,7 +376,7 @@ const Home: NextPage = () => {
                 {isMemberConnectedLoaded && isMemberConnected && (
                   <>
                     <Typography variant="body1">Claim Units</Typography>
-                    <Button variant="contained" onClick={() => claimAllWrite}>
+                    <Button variant="contained" onClick={() => tryCatchWrapper(claimAllWrite)}>
                       Claim
                     </Button>
                     <Button
