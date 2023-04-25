@@ -20,12 +20,15 @@ import {
 } from "../src/generated";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
+import { gdaContract } from "../src/constants";
 
 enum TabType {
   CreatePool,
   SavePool,
   SelectPool,
 }
+
+const GDAv1Interface = new ethers.utils.Interface(gdAv1ABI);
 
 interface EntryPointProps {
   existingPools: string[];
@@ -39,11 +42,6 @@ function a11yProps(index: number) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-
-const gdaContract = {
-  gdAv1ABI,
-  address: "0xaAa60FbA7E682864213502028024749B44164CC1" as any,
-};
 
 const EntryPoint = (props: EntryPointProps) => {
   const { address } = useAccount();
@@ -73,13 +71,36 @@ const EntryPoint = (props: EntryPointProps) => {
     ...gdaContract,
     args: [address as any, superTokenAddress as any],
   });
-  const { write: createPool } = useGdAv1CreatePool(createPoolConfig);
+  const { writeAsync: createPoolWrite } = useGdAv1CreatePool(createPoolConfig);
 
   useEffect(() => {
     if (superToken) {
       setSuperTokenAddress(superToken);
     }
   }, [superToken]);
+
+  const createPool = async () => {
+    if (!createPoolWrite) return;
+    try {
+      const tx = await createPoolWrite();
+      const receipt = await tx.wait();
+      const poolCreatedEventTopic = ethers.utils.id(
+        "PoolCreated(address,address,address)"
+      );
+      const poolCreatedLog = receipt.logs.find((x) =>
+        x.topics.includes(poolCreatedEventTopic)
+      );
+      if (!poolCreatedLog)
+        throw new Error("PoolCreated event not found in tx receipt");
+      const decoded = GDAv1Interface.decodeEventLog(
+        "PoolCreated(address,address,address)",
+        poolCreatedLog.data
+      );
+      setCurrentPool(decoded.pool);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <div>
@@ -106,7 +127,7 @@ const EntryPoint = (props: EntryPointProps) => {
             value={superTokenAddress}
             onChange={(e) => setSuperTokenAddress(e.target.value)}
           />
-          <Button variant="contained" onClick={() => createPool}>
+          <Button variant="contained" onClick={createPool}>
             Create Pool
           </Button>
         </div>
@@ -123,15 +144,19 @@ const EntryPoint = (props: EntryPointProps) => {
           </Typography>
           <TextField
             style={{ marginBottom: 15, width: 420 }}
-            error={isPool != null && !isPool}
-            helperText="The entered address is not a valid pool."
+            error={isPool != null && isPool === false}
+            // helperText="The entered address is not a valid pool."
             id="standard-basic"
             label="Pool address"
             variant="standard"
             value={poolAddress}
             onChange={(e) => setPoolAddress(e.target.value)}
           />
-          <Button variant="contained" disabled={isPool == null || !isPool}>
+          <Button
+            variant="contained"
+            disabled={isPool === false}
+            onClick={() => setCurrentPool(poolAddress)}
+          >
             View Pool
           </Button>
         </div>

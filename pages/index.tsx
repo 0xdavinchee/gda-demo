@@ -9,12 +9,15 @@ import {
   superTokenPoolABI,
   useGdAv1IsMemberConnected,
   usePrepareSuperfluidCallAgreement,
+  usePrepareSuperTokenPoolClaimAll,
+  usePrepareSuperTokenPoolUpdateMember,
   useSuperfluidCallAgreement,
   useSuperTokenPoolAdmin,
-  useSuperTokenPoolGetMemberFlowRate,
+  useSuperTokenPoolClaimAll,
   useSuperTokenPoolSuperToken,
+  useSuperTokenPoolUpdateMember,
 } from "../src/generated";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import {
   Card,
   CardContent,
@@ -22,9 +25,10 @@ import {
   Paper,
   Tab,
   Tabs,
+  TextField,
   Typography,
 } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Interface } from "@ethersproject/abi";
 import EntryPoint from "./EntryPoint";
 import TabPanel from "../component/TabPanel";
@@ -32,6 +36,7 @@ import { gdaContract } from "../src/constants";
 import PoolInfoCard from "../component/PoolInfo";
 
 enum TabType {
+  Admin,
   Distributor,
   Member,
 }
@@ -43,7 +48,18 @@ const superfluidContract = {
 const GDA_INTERFACE = new Interface([
   "function connectPool(address,bytes calldata) returns(bytes memory)",
   "function disconnectPool(address,bytes calldata) returns(bytes memory)",
+  "function distribute(address,address,address,uint256,bytes calldata) returns(bytes memory)",
+  "function distributeFlow(address,address,address,uint256,bytes calldata) returns(bytes memory)",
 ]);
+
+const tryCatchWrapper = async (func?: () => any) => {
+  if (!func) return;
+  try {
+    await func();
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 const Home: NextPage = () => {
   const { address } = useAccount();
@@ -53,6 +69,11 @@ const Home: NextPage = () => {
     "0xfajdj",
     "0xjllas",
   ]);
+  const [memberAddress, setMemberAddress] = useState("");
+  const [memberUnits, setMemberUnits] = useState("");
+  const [distributionAmount, setDistributionAmount] = useState("");
+  const [distributionFlowRate, setDistributionFlowRate] = useState("");
+
   // useEffect if existingPools.length > 0, setEntryPoint to SelectPool
   const [currentPool, setCurrentPool] = useState("");
 
@@ -63,11 +84,11 @@ const Home: NextPage = () => {
 
   // HOOKS
   // REACT HOOKS
-  const currentTime = useMemo(() => {
-    return Math.round(new Date().getTime() / 1000);
-  }, []);
-
-  // READ HOOKS
+  useEffect(() => {
+    if (!existingPools.includes(currentPool)) {
+      setExistingPools([...existingPools, currentPool]);
+    }
+  }, [currentPool, existingPools]);
 
   // READ HOOKS
   // SUPERTOKENPOOL
@@ -88,15 +109,6 @@ const Home: NextPage = () => {
   const isAdmin = useMemo(() => address === poolAdmin, [address, poolAdmin]);
 
   const {
-    data: poolMemberFlowRate,
-    isFetchedAfterMount: poolMemberFlowRateLoaded,
-  } = useSuperTokenPoolGetMemberFlowRate({
-    ...poolContract,
-    args: [address as any],
-    watch: true,
-    enabled: address != null,
-  });
-  const {
     data: isMemberConnected,
     isFetchedAfterMount: isMemberConnectedLoaded,
   } = useGdAv1IsMemberConnected({
@@ -109,9 +121,71 @@ const Home: NextPage = () => {
   // WRITE HOOKS
   // Call Agreement Write Hook
 
-  console.log(poolContract.address);
-  console.log(superfluidContract.address);
+  // SUPERTOKEN POOL
+  const { config: updateMemberConfig } = usePrepareSuperTokenPoolUpdateMember({
+    ...poolContract,
+    args: [memberAddress as any, BigNumber.from(memberUnits || "0")],
+    enabled:
+      currentPool !== "" &&
+      ethers.utils.isAddress(memberAddress) &&
+      memberUnits !== "",
+  });
+  const { writeAsync: updateMemberWrite } =
+    useSuperTokenPoolUpdateMember(updateMemberConfig);
+
+  const { config: claimAllConfig } = usePrepareSuperTokenPoolClaimAll({
+    ...poolContract,
+    enabled: currentPool !== "",
+  });
+  const { writeAsync: claimAllWrite } =
+    useSuperTokenPoolClaimAll(claimAllConfig);
+
   // SUPERFLUID
+  const { config: distributeConfig } = usePrepareSuperfluidCallAgreement({
+    ...superfluidContract,
+    args: [
+      gdaContract.address,
+      currentPool === "" || !superTokenAddress || !address
+        ? "0x"
+        : (GDA_INTERFACE.encodeFunctionData("distribute", [
+            superTokenAddress,
+            address,
+            currentPool,
+            distributionAmount == "" ? "0" : distributionAmount,
+            "0x",
+          ]) as any),
+      "0x",
+    ],
+    enabled:
+      currentPool !== "" &&
+      !ethers.utils.isAddress(superTokenAddress as any) &&
+      distributionAmount !== "",
+  });
+  const { writeAsync: distributeWrite } =
+    useSuperfluidCallAgreement(distributeConfig);
+  const { config: distributeFlowConfig } = usePrepareSuperfluidCallAgreement({
+    ...superfluidContract,
+    args: [
+      gdaContract.address,
+      currentPool === "" || !superTokenAddress || !address
+        ? "0x"
+        : (GDA_INTERFACE.encodeFunctionData("distributeFlow", [
+            superTokenAddress,
+            address,
+            currentPool,
+            distributionFlowRate == "" ? "0" : distributionFlowRate,
+            "0x",
+          ]) as any),
+      "0x",
+    ],
+    enabled:
+      currentPool !== "" &&
+      !ethers.utils.isAddress(superTokenAddress as any) &&
+      distributionFlowRate !== "",
+  });
+  const { writeAsync: distributeFlowWrite } =
+    useSuperfluidCallAgreement(distributeFlowConfig);
+
   const { config: connectPoolConfig } = usePrepareSuperfluidCallAgreement({
     ...superfluidContract,
     args: [
@@ -119,13 +193,16 @@ const Home: NextPage = () => {
       currentPool === ""
         ? "0x"
         : (GDA_INTERFACE.encodeFunctionData("connectPool", [
-          currentPool,
-          "0x",
-        ]) as any),
+            currentPool,
+            "0x",
+          ]) as any),
       "0x",
     ],
     enabled: currentPool !== "",
   });
+  const { writeAsync: connectPoolWrite } =
+    useSuperfluidCallAgreement(connectPoolConfig);
+
   const { config: disconnectPoolConfig } = usePrepareSuperfluidCallAgreement({
     ...superfluidContract,
     args: [
@@ -133,37 +210,15 @@ const Home: NextPage = () => {
       currentPool === ""
         ? "0x"
         : (GDA_INTERFACE.encodeFunctionData("disconnectPool", [
-          currentPool,
-          "0x",
-        ]) as any),
+            currentPool,
+            "0x",
+          ]) as any),
       "0x",
     ],
     enabled: currentPool !== "",
   });
-
-  const { writeAsync: connectPoolWrite } =
-    useSuperfluidCallAgreement(connectPoolConfig);
   const { writeAsync: disconnectPoolWrite } =
     useSuperfluidCallAgreement(disconnectPoolConfig);
-
-  const connectPool = async () => {
-    if (!connectPoolWrite) return;
-    try {
-      await connectPoolWrite();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const disconnectPool = async () => {
-    if (!disconnectPoolWrite) return;
-    try {
-      await disconnectPoolWrite();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   return (
     <Paper>
       <Head>
@@ -177,30 +232,29 @@ const Home: NextPage = () => {
 
       <Paper className={styles.main}>
         <ConnectButton />
-        {currentPool === "" && <>
-          <Typography variant="h1" className={styles.title}>
-            GDA Testnet Demo
-          </Typography>
-          <Card elevation={3} style={{ maxWidth: "690px" }}>
-            <CardContent>
-              <Typography variant="h3" color="red">
-                IMPORTANT! PLEASE READ
-              </Typography>
-              <Typography variant="subtitle1">
-                Welcome! This is a demo of the General Distribution Agreement.
-              </Typography>
-              <Typography variant="subtitle1">
-                Note that it is an alpha release in development and is not ready
-                for production use and it is possible you encounter some issues.
-                Please{" "}
-                <Link href="https://github.com/superfluid-finance/protocol-monorepo/issues/new?assignees=&labels=Type%3A+Bug&template=general-bug-report.md&title=%5BBUG%5D+">
-                  submit any issues
-                </Link>{" "}
-                you find to our GitHub or hop into our Discord to report it.
-              </Typography>
-            </CardContent>
-          </Card>
-        </>}
+        {currentPool === "" && (
+          <>
+            <Typography variant="h1" className={styles.title}>
+              GDA Testnet Demo
+            </Typography>
+            <Card elevation={3} style={{ maxWidth: "690px" }}>
+              <CardContent>
+                <Typography variant="subtitle1">
+                  Welcome! This is a demo of the General Distribution Agreement.
+                </Typography>
+                <Typography variant="subtitle1">
+                  Note that it is an alpha release in development and is not
+                  ready for production use and it is possible you encounter some
+                  issues. Please{" "}
+                  <Link href="https://github.com/superfluid-finance/protocol-monorepo/issues/new?assignees=&labels=Type%3A+Bug&template=general-bug-report.md&title=%5BBUG%5D+">
+                    submit any issues
+                  </Link>{" "}
+                  you find to our GitHub or hop into our Discord to report it.
+                </Typography>
+              </CardContent>
+            </Card>
+          </>
+        )}
 
         {currentPool === "" && (
           <EntryPoint
@@ -223,33 +277,107 @@ const Home: NextPage = () => {
             />
 
             <Tabs value={tab} onChange={(_x, v) => setTab(v)}>
-              <Tab label="Pool Admin/Distributor" />
+              <Tab label="Pool Admin" />
+              <Tab label="Distributor" />
               <Tab label="Member" />
             </Tabs>
 
             <TabPanel value={tab} index={0}>
-              <p>Distributor</p>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <Typography variant="body1">Update Member Units</Typography>
+                <TextField
+                  style={{ marginTop: 10, marginBottom: 10 }}
+                  value={memberAddress}
+                  label="Member Address"
+                  onChange={(e) => setMemberAddress(e.target.value)}
+                />
+                <TextField
+                  style={{ marginBottom: 10 }}
+                  value={memberUnits}
+                  label="Member Units"
+                  onChange={(e) => setMemberUnits(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  disabled={
+                    !ethers.utils.isAddress(memberAddress) || memberUnits === ""
+                  }
+                  onClick={() => tryCatchWrapper(updateMemberWrite)}
+                >
+                  Update Member Units
+                </Button>
+              </div>
             </TabPanel>
             <TabPanel value={tab} index={1}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <Typography variant="body1">Instant Distribution</Typography>
+                <TextField
+                  style={{ marginTop: 10, marginBottom: 10 }}
+                  value={distributionAmount}
+                  label="Requested Distribution Amount"
+                  onChange={(e) => setDistributionAmount(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  disabled={
+                    !ethers.utils.isAddress(memberAddress) || memberUnits === ""
+                  }
+                  onClick={() => tryCatchWrapper(distributeWrite)}
+                >
+                  Distribute
+                </Button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginTop: 25,
+                }}
+              >
+                <Typography variant="body1">Flow Distribution</Typography>
+                <TextField
+                  style={{ marginBottom: 10 }}
+                  value={distributionFlowRate}
+                  label="Requested Distribution Flow Rate"
+                  onChange={(e) => setDistributionFlowRate(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  disabled={
+                    !ethers.utils.isAddress(memberAddress) || memberUnits === ""
+                  }
+                  onClick={() => tryCatchWrapper(distributeFlowWrite)}
+                >
+                  Distribute Flow
+                </Button>
+              </div>
+            </TabPanel>
+            <TabPanel value={tab} index={2}>
               <div>
-                {!isMemberConnected && (
+                {isMemberConnectedLoaded && !isMemberConnected && (
                   <Button
                     variant="contained"
-                    onClick={() => connectPool()}
+                    onClick={() => tryCatchWrapper(connectPoolWrite)}
                     disabled={isMemberConnectedLoaded && isMemberConnected}
                   >
                     Connect to Pool
                   </Button>
                 )}
-                {isMemberConnected && (
-                  <Button
-                    color="error"
-                    variant="contained"
-                    disabled={isMemberConnectedLoaded && !isMemberConnected}
-                    onClick={() => disconnectPool()}
-                  >
-                    Disconnect from Pool
-                  </Button>
+                {isMemberConnectedLoaded && isMemberConnected && (
+                  <>
+                    <Typography variant="body1">Claim Units</Typography>
+                    <Button variant="contained" onClick={() => claimAllWrite}>
+                      Claim
+                    </Button>
+                    <Button
+                      color="error"
+                      variant="contained"
+                      disabled={isMemberConnectedLoaded && !isMemberConnected}
+                      onClick={() => tryCatchWrapper(disconnectPoolWrite)}
+                    >
+                      Disconnect from Pool
+                    </Button>
+                  </>
                 )}
               </div>
             </TabPanel>
