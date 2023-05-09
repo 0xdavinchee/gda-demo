@@ -5,18 +5,20 @@ import FlowingBalance from "./FlowingBalance";
 import { useAccount } from "wagmi";
 import {
   superTokenABI,
-  superTokenPoolABI,
+  superfluidPoolABI,
   useGdAv1IsMemberConnected,
   useSuperTokenName,
-  useSuperTokenPoolGetClaimableNow,
-  useSuperTokenPoolGetDistributionFlowRate,
-  useSuperTokenPoolGetMemberFlowRate,
-  useSuperTokenPoolGetTotalUnits,
-  useSuperTokenPoolGetUnits,
+  useSuperfluidPoolGetClaimableNow,
+  useSuperfluidPoolGetConnectedFlowRate,
+  useSuperfluidPoolGetMemberFlowRate,
+  useSuperfluidPoolGetTotalUnits,
+  useSuperfluidPoolGetUnits,
   useSuperTokenRealtimeBalanceOfNow,
   useSuperTokenSymbol,
+  useSuperfluidPoolGetDisconnectedFlowRate,
 } from "../src/generated";
 import { gdaContract } from "../src/constants";
+import { ethers } from "ethers";
 
 interface PoolInfoProps {
   poolAddress: string;
@@ -25,15 +27,20 @@ interface PoolInfoProps {
 }
 
 const PoolInfoCard = (props: PoolInfoProps) => {
+  console.log(props)
   const { address } = useAccount();
   const { poolAddress, poolAdmin, superTokenAddress } = props;
 
   const poolContract = {
-    superTokenPoolABI,
+    superfluidPoolABI,
     address: poolAddress as any,
   };
 
   const isAdmin = useMemo(() => address === poolAdmin, [address, poolAdmin]);
+
+  const hasValidSuperTokenAddress = useMemo(() => ethers.utils.isAddress(superTokenAddress), [superTokenAddress]);
+
+  const hasValidPoolAddress = useMemo(() => ethers.utils.isAddress(poolAddress), [poolAddress]);
 
   // SUPERTOKEN
   const superTokenContract = {
@@ -44,19 +51,21 @@ const PoolInfoCard = (props: PoolInfoProps) => {
     useSuperTokenRealtimeBalanceOfNow({
       ...superTokenContract,
       args: [address as any],
-      enabled: address != null,
+      enabled: address != null && hasValidSuperTokenAddress,
     });
+
   const { data: superTokenName, isFetchedAfterMount: tokenNameLoaded } =
     useSuperTokenName({
       ...superTokenContract,
-      enabled: address != null,
+      enabled: address != null && hasValidSuperTokenAddress,
     });
+
   const {
     data: superTokenSymbol,
     isFetchedAfterMount: superTokenSymbolLoaded,
   } = useSuperTokenSymbol({
     ...superTokenContract,
-    enabled: address != null,
+    enabled: address != null && hasValidSuperTokenAddress,
   });
 
   // GDAv1
@@ -67,14 +76,14 @@ const PoolInfoCard = (props: PoolInfoProps) => {
     ...gdaContract,
     args: [superTokenAddress as any, poolContract.address, address as any],
     watch: true,
-    enabled: address != null,
+    enabled: address != null && hasValidSuperTokenAddress && hasValidPoolAddress,
   });
 
-  // SUPERTOKENPOOL
+  // superfluidPool
   const {
     data: poolMemberFlowRate,
     isFetchedAfterMount: poolMemberFlowRateLoaded,
-  } = useSuperTokenPoolGetMemberFlowRate({
+  } = useSuperfluidPoolGetMemberFlowRate({
     ...poolContract,
     args: [address as any],
     watch: true,
@@ -82,13 +91,13 @@ const PoolInfoCard = (props: PoolInfoProps) => {
   });
 
   const { data: poolTotalUnits, isFetchedAfterMount: poolTotalUnitsLoaded } =
-    useSuperTokenPoolGetTotalUnits({
+    useSuperfluidPoolGetTotalUnits({
       ...poolContract,
       enabled: address != null,
     });
 
   const { data: poolMemberUnits, isFetchedAfterMount: poolMemberUnitsLoaded } =
-    useSuperTokenPoolGetUnits({
+    useSuperfluidPoolGetUnits({
       ...poolContract,
       args: [address as any],
       enabled: address != null,
@@ -97,16 +106,25 @@ const PoolInfoCard = (props: PoolInfoProps) => {
   const {
     data: claimableBalanceData,
     isFetchedAfterMount: claimableBalanceLoaded,
-  } = useSuperTokenPoolGetClaimableNow({
+  } = useSuperfluidPoolGetClaimableNow({
     ...poolContract,
     args: [address as any],
     enabled: address != null,
   });
 
   const {
-    data: poolDistributionFlowRate,
-    isFetchedAfterMount: poolDistributionFlowRateLoaded,
-  } = useSuperTokenPoolGetDistributionFlowRate({
+    data: connectedFlowRate,
+    isFetchedAfterMount: connectedFlowRateLoaded,
+  } = useSuperfluidPoolGetConnectedFlowRate({
+    ...poolContract,
+    watch: true,
+    enabled: address != null,
+  });
+
+  const {
+    data: disconnectedFlowRate,
+    isFetchedAfterMount: disconnectedFlowRateLoaded,
+  } = useSuperfluidPoolGetDisconnectedFlowRate({
     ...poolContract,
     watch: true,
     enabled: address != null,
@@ -139,7 +157,7 @@ const PoolInfoCard = (props: PoolInfoProps) => {
         <Typography sx={{ fontSize: 16 }}>
           SuperToken:{" "}
           <code>
-            {superTokenAddress} | {superTokenName} | {superTokenSymbol}
+            {superTokenAddress} | {tokenNameLoaded && superTokenName ? superTokenName : ""} | {superTokenSymbol}
           </code>
         </Typography>
         <Typography sx={{ fontSize: 16 }}>
@@ -149,11 +167,18 @@ const PoolInfoCard = (props: PoolInfoProps) => {
             : "0"}
         </Typography>
         <Typography sx={{ fontSize: 16 }}>
-          Distribution Flow Rate:{" "}
-          {poolDistributionFlowRateLoaded && poolDistributionFlowRate
-            ? formatUnits(poolDistributionFlowRate)
+          Connected Flow Rate:{" "}
+          {connectedFlowRateLoaded && connectedFlowRate
+            ? formatUnits(connectedFlowRate)
             : "0"}
-          {" " + superTokenSymbol}/ s
+          {" " + superTokenSymbol} / s
+        </Typography>
+        <Typography sx={{ fontSize: 16 }}>
+          Disconnected Flow Rate:{" "}
+          {disconnectedFlowRateLoaded && disconnectedFlowRate
+            ? formatUnits(disconnectedFlowRate)
+            : "0"}
+          {" " + superTokenSymbol} / s
         </Typography>
         <Typography sx={{ fontSize: 16 }}>
           Your Units:{" "}
@@ -166,7 +191,7 @@ const PoolInfoCard = (props: PoolInfoProps) => {
           {poolMemberFlowRateLoaded && poolMemberFlowRate
             ? formatUnits(poolMemberFlowRate)
             : "0"}
-          {" " + superTokenSymbol}/ s
+          {" " + superTokenSymbol} / s
         </Typography>
         <div style={{ display: "flex", alignItems: "center" }}>
           <Typography style={{ marginRight: 5 }} variant="body1">

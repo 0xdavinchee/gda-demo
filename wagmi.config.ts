@@ -4,7 +4,7 @@ import GeneralDistributionAgreementV1Build from "./abis/IGeneralDistributionAgre
 import SuperTokenBuild from "./abis/ISuperToken.json";
 import SuperfluidBuild from "./abis/ISuperfluid.json";
 import SETHProxyBuild from "./abis/ISETH.json";
-import SuperTokenPoolBuild from "./abis/ISuperTokenPool.json";
+import SuperfluidPoolBuild from "./abis/ISuperfluidPool.json";
 
 export default defineConfig({
   out: "src/generated.ts",
@@ -13,7 +13,7 @@ export default defineConfig({
     { name: "SuperToken", abi: SuperTokenBuild.abi as any },
     { name: "Superfluid", abi: SuperfluidBuild.abi as any },
     { name: "SETHProxy", abi: SETHProxyBuild.abi as any },
-    { name: "SuperTokenPool", abi: SuperTokenPoolBuild.abi as any },
+    { name: "SuperfluidPool", abi: SuperfluidPoolBuild.abi as any },
   ],
   plugins: [react()],
 });

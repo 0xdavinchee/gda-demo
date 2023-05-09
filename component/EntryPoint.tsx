@@ -12,11 +12,11 @@ import TabPanel from "./TabPanel";
 import { useEffect, useState } from "react";
 import {
   gdAv1ABI,
-  superTokenPoolABI,
+  superfluidPoolABI,
   useGdAv1CreatePool,
   useGdAv1IsPool,
   usePrepareGdAv1CreatePool,
-  useSuperTokenPoolSuperToken,
+  useSuperfluidPoolSuperToken,
 } from "../src/generated";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
@@ -49,27 +49,25 @@ const EntryPoint = (props: EntryPointProps) => {
   const [superTokenAddress, setSuperTokenAddress] = useState("");
   const [poolAddress, setPoolAddress] = useState("");
 
-  const superTokenPoolContract = {
-    superTokenPoolABI,
+  const superfluidPoolContract = {
+    superfluidPoolABI,
     address: poolAddress as any,
   };
-
-  const { existingPools, currentPool, setCurrentPool } = props;
-
   const { data: isPool } = useGdAv1IsPool({
     ...gdaContract,
     args: [superTokenAddress as any, poolAddress as any],
-    enabled: superTokenAddress !== "" && poolAddress !== "",
+    enabled: ethers.utils.isAddress(superTokenAddress) && ethers.utils.isAddress(poolAddress),
   });
 
-  const { data: superToken } = useSuperTokenPoolSuperToken({
-    ...superTokenPoolContract,
+  const { data: superToken } = useSuperfluidPoolSuperToken({
+    ...superfluidPoolContract,
     enabled: ethers.utils.isAddress(poolAddress),
   });
 
   const { config: createPoolConfig } = usePrepareGdAv1CreatePool({
     ...gdaContract,
     args: [address as any, superTokenAddress as any],
+    enabled: ethers.utils.isAddress(superTokenAddress),
   });
   const { writeAsync: createPoolWrite } = useGdAv1CreatePool(createPoolConfig);
 
@@ -78,6 +76,12 @@ const EntryPoint = (props: EntryPointProps) => {
       setSuperTokenAddress(superToken);
     }
   }, [superToken]);
+
+  useEffect(() => {
+    if (props.existingPools.length > 0) {
+      setTab(TabType.SelectPool);
+    }
+  }, [props.existingPools])
 
   const createPool = async () => {
     if (!createPoolWrite) return;
@@ -96,7 +100,7 @@ const EntryPoint = (props: EntryPointProps) => {
         "PoolCreated(address,address,address)",
         poolCreatedLog.data
       );
-      setCurrentPool(decoded.pool);
+      props.setCurrentPool(decoded.pool);
     } catch (e) {
       console.error(e);
     }
@@ -155,17 +159,17 @@ const EntryPoint = (props: EntryPointProps) => {
           <Button
             variant="contained"
             disabled={isPool === false}
-            onClick={() => setCurrentPool(poolAddress)}
+            onClick={() => props.setCurrentPool(poolAddress)}
           >
             View Pool
           </Button>
         </div>
       </TabPanel>
       <TabPanel value={tab} index={2}>
-        {existingPools.length === 0 && (
+        {props.existingPools.length === 0 && (
           <Typography>You don&apos;t have any pools saved currently.</Typography>
         )}
-        {existingPools.length > 0 && (
+        {props.existingPools.length > 0 && (
           <>
             <div>
               <Typography variant="body1">Select an existing pool:</Typography>
@@ -177,9 +181,9 @@ const EntryPoint = (props: EntryPointProps) => {
                 </InputLabel>
                 <Select
                   native
-                  value={currentPool}
+                  value={props.currentPool}
                   // @ts-ignore Typings are not considering `native`
-                  onChange={(e) => setCurrentPool(e.target.value)}
+                  onChange={(e) => props.setCurrentPool(e.target.value)}
                   label="Native"
                   inputProps={{
                     id: "select-multiple-native",
@@ -188,7 +192,7 @@ const EntryPoint = (props: EntryPointProps) => {
                   <option key="" value="">
                     Select a pool
                   </option>
-                  {existingPools.map((pool) => (
+                  {props.existingPools.map((pool) => (
                     <option key={pool} value={pool}>
                       {pool}
                     </option>

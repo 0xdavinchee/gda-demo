@@ -1,0 +1,3240 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "name": "SUPERFLUID_POOL_INVALID_TIME",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SUPERFLUID_POOL_NEGATIVE_UNITS_NOT_SUPPORTED",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SUPERFLUID_POOL_NOT_GDA",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SUPERFLUID_POOL_NOT_POOL_ADMIN",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "member",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "claimableAmount",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "totalClaimed",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "DistributionClaimed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "member",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint128",
+          "name": "units",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "updatedAt",
+          "type": "uint256"
+        }
+      ],
+      "name": "MemberUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint128",
+          "name": "totalUnits",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint32",
+          "name": "wpSettledAt",
+          "type": "uint32"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "wpSettledValue",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int96",
+          "name": "wpFlowRate",
+          "type": "int96"
+        }
+      ],
+      "name": "PoolIndexUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "admin",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "memberAddr",
+          "type": "address"
+        }
+      ],
+      "name": "claimAll",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "claimAll",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "memberAddr",
+          "type": "address"
+        },
+        {
+          "internalType": "uint32",
+          "name": "time",
+          "type": "uint32"
+        }
+      ],
+      "name": "getClaimable",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "memberAddr",
+          "type": "address"
+        }
+      ],
+      "name": "getClaimableNow",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "claimableBalance",
+          "type": "int256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getConnectedFlowRate",
+      "outputs": [
+        {
+          "internalType": "int96",
+          "name": "",
+          "type": "int96"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint32",
+          "name": "time",
+          "type": "uint32"
+        }
+      ],
+      "name": "getDisconnectedBalance",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "balance",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getDisconnectedFlowRate",
+      "outputs": [
+        {
+          "internalType": "int96",
+          "name": "",
+          "type": "int96"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getDisconnectedUnits",
+      "outputs": [
+        {
+          "internalType": "uint128",
+          "name": "",
+          "type": "uint128"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "memberAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getMemberFlowRate",
+      "outputs": [
+        {
+          "internalType": "int96",
+          "name": "",
+          "type": "int96"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTotalUnits",
+      "outputs": [
+        {
+          "internalType": "uint128",
+          "name": "",
+          "type": "uint128"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "memberAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getUnits",
+      "outputs": [
+        {
+          "internalType": "uint128",
+          "name": "",
+          "type": "uint128"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "memberAddr",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "doConnect",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint32",
+          "name": "time",
+          "type": "uint32"
+        }
+      ],
+      "name": "operatorConnectMember",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "superToken",
+      "outputs": [
+        {
+          "internalType": "contract ISuperfluidToken",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "memberAddr",
+          "type": "address"
+        },
+        {
+          "internalType": "uint128",
+          "name": "newUnits",
+          "type": "uint128"
+        }
+      ],
+      "name": "updateMember",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "admin()": "f851a440",
+    "claimAll()": "d1058e59",
+    "claimAll(address)": "77329f35",
+    "getClaimable(address,uint32)": "7d6c008d",
+    "getClaimableNow(address)": "21dd5777",
+    "getConnectedFlowRate()": "1d6c0a81",
+    "getDisconnectedBalance(uint32)": "6c0c582a",
+    "getDisconnectedFlowRate()": "ecbfb601",
+    "getDisconnectedUnits()": "6150be47",
+    "getMemberFlowRate(address)": "539e8c1c",
+    "getTotalUnits()": "a754a702",
+    "getUnits(address)": "0fefbc09",
+    "operatorConnectMember(address,bool,uint32)": "d877ec87",
+    "superToken()": "2b4116f7",
+    "updateMember(address,uint128)": "bb5ec8f2"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"SUPERFLUID_POOL_INVALID_TIME\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SUPERFLUID_POOL_NEGATIVE_UNITS_NOT_SUPPORTED\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SUPERFLUID_POOL_NOT_GDA\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SUPERFLUID_POOL_NOT_POOL_ADMIN\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"member\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"int256\",\"name\":\"claimableAmount\",\"type\":\"int256\"},{\"indexed\":false,\"internalType\":\"int256\",\"name\":\"totalClaimed\",\"type\":\"int256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"DistributionClaimed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"member\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint128\",\"name\":\"units\",\"type\":\"uint128\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"updatedAt\",\"type\":\"uint256\"}],\"name\":\"MemberUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint128\",\"name\":\"totalUnits\",\"type\":\"uint128\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"wpSettledAt\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"int256\",\"name\":\"wpSettledValue\",\"type\":\"int256\"},{\"indexed\":false,\"internalType\":\"int96\",\"name\":\"wpFlowRate\",\"type\":\"int96\"}],\"name\":\"PoolIndexUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"admin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"memberAddr\",\"type\":\"address\"}],\"name\":\"claimAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"claimAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"memberAddr\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"time\",\"type\":\"uint32\"}],\"name\":\"getClaimable\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"memberAddr\",\"type\":\"address\"}],\"name\":\"getClaimableNow\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"claimableBalance\",\"type\":\"int256\"},{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getConnectedFlowRate\",\"outputs\":[{\"internalType\":\"int96\",\"name\":\"\",\"type\":\"int96\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"time\",\"type\":\"uint32\"}],\"name\":\"getDisconnectedBalance\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"balance\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDisconnectedFlowRate\",\"outputs\":[{\"internalType\":\"int96\",\"name\":\"\",\"type\":\"int96\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDisconnectedUnits\",\"outputs\":[{\"internalType\":\"uint128\",\"name\":\"\",\"type\":\"uint128\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"memberAddress\",\"type\":\"address\"}],\"name\":\"getMemberFlowRate\",\"outputs\":[{\"internalType\":\"int96\",\"name\":\"\",\"type\":\"int96\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalUnits\",\"outputs\":[{\"internalType\":\"uint128\",\"name\":\"\",\"type\":\"uint128\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"memberAddress\",\"type\":\"address\"}],\"name\":\"getUnits\",\"outputs\":[{\"internalType\":\"uint128\",\"name\":\"\",\"type\":\"uint128\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"memberAddr\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"doConnect\",\"type\":\"bool\"},{\"internalType\":\"uint32\",\"name\":\"time\",\"type\":\"uint32\"}],\"name\":\"operatorConnectMember\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"superToken\",\"outputs\":[{\"internalType\":\"contract ISuperfluidToken\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"memberAddr\",\"type\":\"address\"},{\"internalType\":\"uint128\",\"name\":\"newUnits\",\"type\":\"uint128\"}],\"name\":\"updateMember\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"The interface for any super token pool regardless of the distribution schemes.\",\"kind\":\"dev\",\"methods\":{\"claimAll(address)\":{\"params\":{\"memberAddr\":\"The address of the member\"}},\"getClaimable(address,uint32)\":{\"params\":{\"memberAddr\":\"The address of the member\",\"time\":\"The time to query\"}},\"getClaimableNow(address)\":{\"params\":{\"memberAddr\":\"The address of the member\"}},\"getDisconnectedBalance(uint32)\":{\"params\":{\"time\":\"The time to query\"}},\"getMemberFlowRate(address)\":{\"params\":{\"memberAddress\":\"The address of the member\"}},\"getUnits(address)\":{\"params\":{\"memberAddress\":\"The address of the member\"}},\"operatorConnectMember(address,bool,uint32)\":{\"details\":\"This is only callable by the GDA and is not to be used by the end user\"},\"updateMember(address,uint128)\":{\"params\":{\"memberAddr\":\"The address of the member\",\"newUnits\":\"The new units for the member\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"admin()\":{\"notice\":\"The pool admin\"},\"claimAll()\":{\"notice\":\"Claims the claimable balance for `msg.sender` at `block.timestamp`\"},\"claimAll(address)\":{\"notice\":\"Claims the claimable balance for `memberAddr` at `block.timestamp`\"},\"getClaimable(address,uint32)\":{\"notice\":\"The claimable balance for `memberAddr` at `time` in the pool\"},\"getClaimableNow(address)\":{\"notice\":\"The claimable balance for `memberAddr` at `block.timestamp` in the pool\"},\"getConnectedFlowRate()\":{\"notice\":\"The flow rate of the connected members\"},\"getDisconnectedBalance(uint32)\":{\"notice\":\"The balance of all the disconnected members at `time`\"},\"getDisconnectedFlowRate()\":{\"notice\":\"The flow rate of the disconnected members\"},\"getDisconnectedUnits()\":{\"notice\":\"The total number of units of disconnected members\"},\"getMemberFlowRate(address)\":{\"notice\":\"The flow rate a member is receiving from the pool\"},\"getTotalUnits()\":{\"notice\":\"The total units of the pool\"},\"getUnits(address)\":{\"notice\":\"The total number of units for `memberAddress`\"},\"operatorConnectMember(address,bool,uint32)\":{\"notice\":\"Does a claim for `memberAddr` at `time` and handles internal accounting logic\"},\"superToken()\":{\"notice\":\"The SuperToken for the pool\"},\"updateMember(address,uint128)\":{\"notice\":\"Sets `memberAddr`'s ownedUnits to `newUnits`\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"packages/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidPool.sol\":\"ISuperfluidPool\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin/=node_modules/@openzeppelin/\",\":@superfluid-finance/ethereum-contracts/contracts/=packages/ethereum-contracts/contracts/\",\":@superfluid-finance/solidity-semantic-money/src/=packages/solidity-semantic-money/src/\",\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":forge-std/=lib/forge-std/src/\"]},\"sources\":{\"packages/ethereum-contracts/contracts/interfaces/superfluid/ISuperAgreement.sol\":{\"keccak256\":\"0x9b4fab6dcac1337f78e04d67d8c2b48b1de8bd4bbf14b475840f9dbda7b8f21e\",\"license\":\"AGPLv3\",\"urls\":[\"bzz-raw://cc2f3629ad0cb46bd4f595880591ad6c9d75a82d920cb9355e462fbf8022c820\",\"dweb:/ipfs/QmXMovxK4qpWT4yffXxUVjkMNwxEfS6mtn39mLSmjaxEdW\"]},\"packages/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidPool.sol\":{\"keccak256\":\"0xe061f337a0c7ebacedc7fcadefa06ee0008e9cf6ac10ccd8ce0824267958104d\",\"license\":\"AGPLv3\",\"urls\":[\"bzz-raw://08d837aa5d9375e9a10a1478a671086c14833d4d816fec572a4b680c61145a9a\",\"dweb:/ipfs/QmWV7xKLaMSueec9sCejdXhoS7ZymqzuVrTJrx6qrKauHp\"]},\"packages/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidToken.sol\":{\"keccak256\":\"0x9cad3866982902ea88df0874a563d2e4aeba5a5bcc6289c30cccf9b4099d2fb6\",\"license\":\"AGPLv3\",\"urls\":[\"bzz-raw://e8fd960b259331f204c7cb7dcd32b09d68f4294e3b872fad00ad467609c3ef72\",\"dweb:/ipfs/QmeZFEvsDunXQGPbXFfN5AvfKM5am1FY8Xv6e3c4tNKvgY\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.19+commit.7dd6d404"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "SUPERFLUID_POOL_INVALID_TIME"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "SUPERFLUID_POOL_NEGATIVE_UNITS_NOT_SUPPORTED"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "SUPERFLUID_POOL_NOT_GDA"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "SUPERFLUID_POOL_NOT_POOL_ADMIN"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "member",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "int256",
+              "name": "claimableAmount",
+              "type": "int256",
+              "indexed": false
+            },
+            {
+              "internalType": "int256",
+              "name": "totalClaimed",
+              "type": "int256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DistributionClaimed",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "member",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint128",
+              "name": "units",
+              "type": "uint128",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "updatedAt",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "MemberUpdated",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint128",
+              "name": "totalUnits",
+              "type": "uint128",
+              "indexed": false
+            },
+            {
+              "internalType": "uint32",
+              "name": "wpSettledAt",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "int256",
+              "name": "wpSettledValue",
+              "type": "int256",
+              "indexed": false
+            },
+            {
+              "internalType": "int96",
+              "name": "wpFlowRate",
+              "type": "int96",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "PoolIndexUpdated",
+          "anonymous": false
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "admin",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "memberAddr",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "claimAll",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "claimAll",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "memberAddr",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "time",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getClaimable",
+          "outputs": [
+            {
+              "internalType": "int256",
+              "name": "",
+              "type": "int256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "memberAddr",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getClaimableNow",
+          "outputs": [
+            {
+              "internalType": "int256",
+              "name": "claimableBalance",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getConnectedFlowRate",
+          "outputs": [
+            {
+              "internalType": "int96",
+              "name": "",
+              "type": "int96"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "time",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getDisconnectedBalance",
+          "outputs": [
+            {
+              "internalType": "int256",
+              "name": "balance",
+              "type": "int256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getDisconnectedFlowRate",
+          "outputs": [
+            {
+              "internalType": "int96",
+              "name": "",
+              "type": "int96"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getDisconnectedUnits",
+          "outputs": [
+            {
+              "internalType": "uint128",
+              "name": "",
+              "type": "uint128"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "memberAddress",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getMemberFlowRate",
+          "outputs": [
+            {
+              "internalType": "int96",
+              "name": "",
+              "type": "int96"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getTotalUnits",
+          "outputs": [
+            {
+              "internalType": "uint128",
+              "name": "",
+              "type": "uint128"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "memberAddress",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getUnits",
+          "outputs": [
+            {
+              "internalType": "uint128",
+              "name": "",
+              "type": "uint128"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "memberAddr",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "doConnect",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint32",
+              "name": "time",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "operatorConnectMember",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "superToken",
+          "outputs": [
+            {
+              "internalType": "contract ISuperfluidToken",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "memberAddr",
+              "type": "address"
+            },
+            {
+              "internalType": "uint128",
+              "name": "newUnits",
+              "type": "uint128"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateMember",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "claimAll(address)": {
+            "params": {
+              "memberAddr": "The address of the member"
+            }
+          },
+          "getClaimable(address,uint32)": {
+            "params": {
+              "memberAddr": "The address of the member",
+              "time": "The time to query"
+            }
+          },
+          "getClaimableNow(address)": {
+            "params": {
+              "memberAddr": "The address of the member"
+            }
+          },
+          "getDisconnectedBalance(uint32)": {
+            "params": {
+              "time": "The time to query"
+            }
+          },
+          "getMemberFlowRate(address)": {
+            "params": {
+              "memberAddress": "The address of the member"
+            }
+          },
+          "getUnits(address)": {
+            "params": {
+              "memberAddress": "The address of the member"
+            }
+          },
+          "operatorConnectMember(address,bool,uint32)": {
+            "details": "This is only callable by the GDA and is not to be used by the end user"
+          },
+          "updateMember(address,uint128)": {
+            "params": {
+              "memberAddr": "The address of the member",
+              "newUnits": "The new units for the member"
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "admin()": {
+            "notice": "The pool admin"
+          },
+          "claimAll()": {
+            "notice": "Claims the claimable balance for `msg.sender` at `block.timestamp`"
+          },
+          "claimAll(address)": {
+            "notice": "Claims the claimable balance for `memberAddr` at `block.timestamp`"
+          },
+          "getClaimable(address,uint32)": {
+            "notice": "The claimable balance for `memberAddr` at `time` in the pool"
+          },
+          "getClaimableNow(address)": {
+            "notice": "The claimable balance for `memberAddr` at `block.timestamp` in the pool"
+          },
+          "getConnectedFlowRate()": {
+            "notice": "The flow rate of the connected members"
+          },
+          "getDisconnectedBalance(uint32)": {
+            "notice": "The balance of all the disconnected members at `time`"
+          },
+          "getDisconnectedFlowRate()": {
+            "notice": "The flow rate of the disconnected members"
+          },
+          "getDisconnectedUnits()": {
+            "notice": "The total number of units of disconnected members"
+          },
+          "getMemberFlowRate(address)": {
+            "notice": "The flow rate a member is receiving from the pool"
+          },
+          "getTotalUnits()": {
+            "notice": "The total units of the pool"
+          },
+          "getUnits(address)": {
+            "notice": "The total number of units for `memberAddress`"
+          },
+          "operatorConnectMember(address,bool,uint32)": {
+            "notice": "Does a claim for `memberAddr` at `time` and handles internal accounting logic"
+          },
+          "superToken()": {
+            "notice": "The SuperToken for the pool"
+          },
+          "updateMember(address,uint128)": {
+            "notice": "Sets `memberAddr`'s ownedUnits to `newUnits`"
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        ":@openzeppelin/=node_modules/@openzeppelin/",
+        ":@superfluid-finance/ethereum-contracts/contracts/=packages/ethereum-contracts/contracts/",
+        ":@superfluid-finance/solidity-semantic-money/src/=packages/solidity-semantic-money/src/",
+        ":ds-test/=lib/forge-std/lib/ds-test/src/",
+        ":forge-std/=lib/forge-std/src/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "packages/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidPool.sol": "ISuperfluidPool"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "packages/ethereum-contracts/contracts/interfaces/superfluid/ISuperAgreement.sol": {
+        "keccak256": "0x9b4fab6dcac1337f78e04d67d8c2b48b1de8bd4bbf14b475840f9dbda7b8f21e",
+        "urls": [
+          "bzz-raw://cc2f3629ad0cb46bd4f595880591ad6c9d75a82d920cb9355e462fbf8022c820",
+          "dweb:/ipfs/QmXMovxK4qpWT4yffXxUVjkMNwxEfS6mtn39mLSmjaxEdW"
+        ],
+        "license": "AGPLv3"
+      },
+      "packages/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidPool.sol": {
+        "keccak256": "0xe061f337a0c7ebacedc7fcadefa06ee0008e9cf6ac10ccd8ce0824267958104d",
+        "urls": [
+          "bzz-raw://08d837aa5d9375e9a10a1478a671086c14833d4d816fec572a4b680c61145a9a",
+          "dweb:/ipfs/QmWV7xKLaMSueec9sCejdXhoS7ZymqzuVrTJrx6qrKauHp"
+        ],
+        "license": "AGPLv3"
+      },
+      "packages/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidToken.sol": {
+        "keccak256": "0x9cad3866982902ea88df0874a563d2e4aeba5a5bcc6289c30cccf9b4099d2fb6",
+        "urls": [
+          "bzz-raw://e8fd960b259331f204c7cb7dcd32b09d68f4294e3b872fad00ad467609c3ef72",
+          "dweb:/ipfs/QmeZFEvsDunXQGPbXFfN5AvfKM5am1FY8Xv6e3c4tNKvgY"
+        ],
+        "license": "AGPLv3"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "packages/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidPool.sol",
+    "id": 58577,
+    "exportedSymbols": {
+      "ISuperfluidPool": [
+        58536
+      ],
+      "ISuperfluidPoolAdmin": [
+        58576
+      ],
+      "ISuperfluidToken": [
+        58862
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "35:4110:82",
+    "nodes": [
+      {
+        "id": 58379,
+        "nodeType": "PragmaDirective",
+        "src": "35:24:82",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".4"
+        ]
+      },
+      {
+        "id": 58381,
+        "nodeType": "ImportDirective",
+        "src": "61:68:82",
+        "nodes": [],
+        "absolutePath": "packages/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidToken.sol",
+        "file": "../superfluid/ISuperfluidToken.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 58577,
+        "sourceUnit": 58863,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 58380,
+              "name": "ISuperfluidToken",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 58862,
+              "src": "69:16:82",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 58536,
+        "nodeType": "ContractDefinition",
+        "src": "226:3250:82",
+        "nodes": [
+          {
+            "id": 58384,
+            "nodeType": "ErrorDefinition",
+            "src": "280:37:82",
+            "nodes": [],
+            "errorSelector": "83c35016",
+            "name": "SUPERFLUID_POOL_INVALID_TIME",
+            "nameLocation": "286:28:82",
+            "parameters": {
+              "id": 58383,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "314:2:82"
+            }
+          },
+          {
+            "id": 58386,
+            "nodeType": "ErrorDefinition",
+            "src": "322:53:82",
+            "nodes": [],
+            "errorSelector": "5da34404",
+            "name": "SUPERFLUID_POOL_NEGATIVE_UNITS_NOT_SUPPORTED",
+            "nameLocation": "328:44:82",
+            "parameters": {
+              "id": 58385,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "372:2:82"
+            }
+          },
+          {
+            "id": 58388,
+            "nodeType": "ErrorDefinition",
+            "src": "380:39:82",
+            "nodes": [],
+            "errorSelector": "7b0be922",
+            "name": "SUPERFLUID_POOL_NOT_POOL_ADMIN",
+            "nameLocation": "386:30:82",
+            "parameters": {
+              "id": 58387,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "416:2:82"
+            }
+          },
+          {
+            "id": 58390,
+            "nodeType": "ErrorDefinition",
+            "src": "424:32:82",
+            "nodes": [],
+            "errorSelector": "fcbe3f9e",
+            "name": "SUPERFLUID_POOL_NOT_GDA",
+            "nameLocation": "430:23:82",
+            "parameters": {
+              "id": 58389,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "453:2:82"
+            }
+          },
+          {
+            "id": 58398,
+            "nodeType": "EventDefinition",
+            "src": "476:78:82",
+            "nodes": [],
+            "anonymous": false,
+            "eventSelector": "9441aa890fd5a1d84656c98631aa436bf2f66acf719587b7bdc817b920b13920",
+            "name": "MemberUpdated",
+            "nameLocation": "482:13:82",
+            "parameters": {
+              "id": 58397,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58392,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "member",
+                  "nameLocation": "512:6:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58398,
+                  "src": "496:22:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58391,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "496:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58394,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "units",
+                  "nameLocation": "528:5:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58398,
+                  "src": "520:13:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  },
+                  "typeName": {
+                    "id": 58393,
+                    "name": "uint128",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "520:7:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint128",
+                      "typeString": "uint128"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58396,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "updatedAt",
+                  "nameLocation": "543:9:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58398,
+                  "src": "535:17:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 58395,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "535:7:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "495:58:82"
+            }
+          },
+          {
+            "id": 58408,
+            "nodeType": "EventDefinition",
+            "src": "559:104:82",
+            "nodes": [],
+            "anonymous": false,
+            "eventSelector": "32cc23930995217e91ea212e94f32b9a5fc159559115b6c5f031a17ac5dc58ce",
+            "name": "PoolIndexUpdated",
+            "nameLocation": "565:16:82",
+            "parameters": {
+              "id": 58407,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58400,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "totalUnits",
+                  "nameLocation": "590:10:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58408,
+                  "src": "582:18:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  },
+                  "typeName": {
+                    "id": 58399,
+                    "name": "uint128",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "582:7:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint128",
+                      "typeString": "uint128"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58402,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "wpSettledAt",
+                  "nameLocation": "609:11:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58408,
+                  "src": "602:18:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 58401,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "602:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58404,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "wpSettledValue",
+                  "nameLocation": "629:14:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58408,
+                  "src": "622:21:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int256",
+                    "typeString": "int256"
+                  },
+                  "typeName": {
+                    "id": 58403,
+                    "name": "int256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "622:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58406,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "wpFlowRate",
+                  "nameLocation": "651:10:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58408,
+                  "src": "645:16:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int96",
+                    "typeString": "int96"
+                  },
+                  "typeName": {
+                    "id": 58405,
+                    "name": "int96",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "645:5:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int96",
+                      "typeString": "int96"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "581:81:82"
+            }
+          },
+          {
+            "id": 58418,
+            "nodeType": "EventDefinition",
+            "src": "668:114:82",
+            "nodes": [],
+            "anonymous": false,
+            "eventSelector": "1d5f6c745453e9903e11ccda5e1f6c6b5bd4d088af055da9ba0bb50da33d440e",
+            "name": "DistributionClaimed",
+            "nameLocation": "674:19:82",
+            "parameters": {
+              "id": 58417,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58410,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "member",
+                  "nameLocation": "710:6:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58418,
+                  "src": "694:22:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58409,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "694:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58412,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "claimableAmount",
+                  "nameLocation": "725:15:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58418,
+                  "src": "718:22:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int256",
+                    "typeString": "int256"
+                  },
+                  "typeName": {
+                    "id": 58411,
+                    "name": "int256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "718:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58414,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "totalClaimed",
+                  "nameLocation": "749:12:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58418,
+                  "src": "742:19:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int256",
+                    "typeString": "int256"
+                  },
+                  "typeName": {
+                    "id": 58413,
+                    "name": "int256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "742:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58416,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "timestamp",
+                  "nameLocation": "771:9:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58418,
+                  "src": "763:17:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 58415,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "763:7:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "693:88:82"
+            }
+          },
+          {
+            "id": 58424,
+            "nodeType": "FunctionDefinition",
+            "src": "819:49:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58419,
+              "nodeType": "StructuredDocumentation",
+              "src": "788:26:82",
+              "text": "@notice The pool admin"
+            },
+            "functionSelector": "f851a440",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "admin",
+            "nameLocation": "828:5:82",
+            "parameters": {
+              "id": 58420,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "833:2:82"
+            },
+            "returnParameters": {
+              "id": 58423,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58422,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58424,
+                  "src": "859:7:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58421,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "859:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "858:9:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58431,
+            "nodeType": "FunctionDefinition",
+            "src": "918:63:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58425,
+              "nodeType": "StructuredDocumentation",
+              "src": "874:39:82",
+              "text": "@notice The SuperToken for the pool"
+            },
+            "functionSelector": "2b4116f7",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "superToken",
+            "nameLocation": "927:10:82",
+            "parameters": {
+              "id": 58426,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "937:2:82"
+            },
+            "returnParameters": {
+              "id": 58430,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58429,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58431,
+                  "src": "963:16:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_ISuperfluidToken_$58862",
+                    "typeString": "contract ISuperfluidToken"
+                  },
+                  "typeName": {
+                    "id": 58428,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 58427,
+                      "name": "ISuperfluidToken",
+                      "nameLocations": [
+                        "963:16:82"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 58862,
+                      "src": "963:16:82"
+                    },
+                    "referencedDeclaration": 58862,
+                    "src": "963:16:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_ISuperfluidToken_$58862",
+                      "typeString": "contract ISuperfluidToken"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "962:18:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58437,
+            "nodeType": "FunctionDefinition",
+            "src": "1031:57:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58432,
+              "nodeType": "StructuredDocumentation",
+              "src": "987:39:82",
+              "text": "@notice The total units of the pool"
+            },
+            "functionSelector": "a754a702",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTotalUnits",
+            "nameLocation": "1040:13:82",
+            "parameters": {
+              "id": 58433,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1053:2:82"
+            },
+            "returnParameters": {
+              "id": 58436,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58435,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58437,
+                  "src": "1079:7:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  },
+                  "typeName": {
+                    "id": 58434,
+                    "name": "uint128",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1079:7:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint128",
+                      "typeString": "uint128"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1078:9:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58443,
+            "nodeType": "FunctionDefinition",
+            "src": "1160:64:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58438,
+              "nodeType": "StructuredDocumentation",
+              "src": "1094:61:82",
+              "text": "@notice The total number of units of disconnected members"
+            },
+            "functionSelector": "6150be47",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getDisconnectedUnits",
+            "nameLocation": "1169:20:82",
+            "parameters": {
+              "id": 58439,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1189:2:82"
+            },
+            "returnParameters": {
+              "id": 58442,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58441,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58443,
+                  "src": "1215:7:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  },
+                  "typeName": {
+                    "id": 58440,
+                    "name": "uint128",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1215:7:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint128",
+                      "typeString": "uint128"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1214:9:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58451,
+            "nodeType": "FunctionDefinition",
+            "src": "1347:73:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58444,
+              "nodeType": "StructuredDocumentation",
+              "src": "1230:112:82",
+              "text": "@notice The total number of units for `memberAddress`\n @param memberAddress The address of the member"
+            },
+            "functionSelector": "0fefbc09",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getUnits",
+            "nameLocation": "1356:8:82",
+            "parameters": {
+              "id": 58447,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58446,
+                  "mutability": "mutable",
+                  "name": "memberAddress",
+                  "nameLocation": "1373:13:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58451,
+                  "src": "1365:21:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58445,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1365:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1364:23:82"
+            },
+            "returnParameters": {
+              "id": 58450,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58449,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58451,
+                  "src": "1411:7:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  },
+                  "typeName": {
+                    "id": 58448,
+                    "name": "uint128",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1411:7:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint128",
+                      "typeString": "uint128"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1410:9:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58457,
+            "nodeType": "FunctionDefinition",
+            "src": "1481:62:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58452,
+              "nodeType": "StructuredDocumentation",
+              "src": "1426:50:82",
+              "text": "@notice The flow rate of the connected members"
+            },
+            "functionSelector": "1d6c0a81",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getConnectedFlowRate",
+            "nameLocation": "1490:20:82",
+            "parameters": {
+              "id": 58453,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1510:2:82"
+            },
+            "returnParameters": {
+              "id": 58456,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58455,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58457,
+                  "src": "1536:5:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int96",
+                    "typeString": "int96"
+                  },
+                  "typeName": {
+                    "id": 58454,
+                    "name": "int96",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1536:5:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int96",
+                      "typeString": "int96"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1535:7:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58463,
+            "nodeType": "FunctionDefinition",
+            "src": "1607:65:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58458,
+              "nodeType": "StructuredDocumentation",
+              "src": "1549:53:82",
+              "text": "@notice The flow rate of the disconnected members"
+            },
+            "functionSelector": "ecbfb601",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getDisconnectedFlowRate",
+            "nameLocation": "1616:23:82",
+            "parameters": {
+              "id": 58459,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1639:2:82"
+            },
+            "returnParameters": {
+              "id": 58462,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58461,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58463,
+                  "src": "1665:5:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int96",
+                    "typeString": "int96"
+                  },
+                  "typeName": {
+                    "id": 58460,
+                    "name": "int96",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1665:5:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int96",
+                      "typeString": "int96"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1664:7:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58471,
+            "nodeType": "FunctionDefinition",
+            "src": "1786:84:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58464,
+              "nodeType": "StructuredDocumentation",
+              "src": "1678:103:82",
+              "text": "@notice The balance of all the disconnected members at `time`\n @param time The time to query"
+            },
+            "functionSelector": "6c0c582a",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getDisconnectedBalance",
+            "nameLocation": "1795:22:82",
+            "parameters": {
+              "id": 58467,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58466,
+                  "mutability": "mutable",
+                  "name": "time",
+                  "nameLocation": "1825:4:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58471,
+                  "src": "1818:11:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 58465,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1818:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1817:13:82"
+            },
+            "returnParameters": {
+              "id": 58470,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58469,
+                  "mutability": "mutable",
+                  "name": "balance",
+                  "nameLocation": "1861:7:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58471,
+                  "src": "1854:14:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int256",
+                    "typeString": "int256"
+                  },
+                  "typeName": {
+                    "id": 58468,
+                    "name": "int256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1854:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1853:16:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58479,
+            "nodeType": "FunctionDefinition",
+            "src": "1997:80:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58472,
+              "nodeType": "StructuredDocumentation",
+              "src": "1876:116:82",
+              "text": "@notice The flow rate a member is receiving from the pool\n @param memberAddress The address of the member"
+            },
+            "functionSelector": "539e8c1c",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getMemberFlowRate",
+            "nameLocation": "2006:17:82",
+            "parameters": {
+              "id": 58475,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58474,
+                  "mutability": "mutable",
+                  "name": "memberAddress",
+                  "nameLocation": "2032:13:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58479,
+                  "src": "2024:21:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58473,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2024:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2023:23:82"
+            },
+            "returnParameters": {
+              "id": 58478,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58477,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58479,
+                  "src": "2070:5:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int96",
+                    "typeString": "int96"
+                  },
+                  "typeName": {
+                    "id": 58476,
+                    "name": "int96",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2070:5:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int96",
+                      "typeString": "int96"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2069:7:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58489,
+            "nodeType": "FunctionDefinition",
+            "src": "2250:86:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58480,
+              "nodeType": "StructuredDocumentation",
+              "src": "2083:162:82",
+              "text": "@notice The claimable balance for `memberAddr` at `time` in the pool\n @param memberAddr The address of the member\n @param time The time to query"
+            },
+            "functionSelector": "7d6c008d",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getClaimable",
+            "nameLocation": "2259:12:82",
+            "parameters": {
+              "id": 58485,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58482,
+                  "mutability": "mutable",
+                  "name": "memberAddr",
+                  "nameLocation": "2280:10:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58489,
+                  "src": "2272:18:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58481,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2272:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58484,
+                  "mutability": "mutable",
+                  "name": "time",
+                  "nameLocation": "2299:4:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58489,
+                  "src": "2292:11:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 58483,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2292:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2271:33:82"
+            },
+            "returnParameters": {
+              "id": 58488,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58487,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58489,
+                  "src": "2328:6:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int256",
+                    "typeString": "int256"
+                  },
+                  "typeName": {
+                    "id": 58486,
+                    "name": "int256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2328:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2327:8:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58499,
+            "nodeType": "FunctionDefinition",
+            "src": "2482:112:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58490,
+              "nodeType": "StructuredDocumentation",
+              "src": "2342:135:82",
+              "text": "@notice The claimable balance for `memberAddr` at `block.timestamp` in the pool\n @param memberAddr The address of the member"
+            },
+            "functionSelector": "21dd5777",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getClaimableNow",
+            "nameLocation": "2491:15:82",
+            "parameters": {
+              "id": 58493,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58492,
+                  "mutability": "mutable",
+                  "name": "memberAddr",
+                  "nameLocation": "2515:10:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58499,
+                  "src": "2507:18:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58491,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2507:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2506:20:82"
+            },
+            "returnParameters": {
+              "id": 58498,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58495,
+                  "mutability": "mutable",
+                  "name": "claimableBalance",
+                  "nameLocation": "2557:16:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58499,
+                  "src": "2550:23:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int256",
+                    "typeString": "int256"
+                  },
+                  "typeName": {
+                    "id": 58494,
+                    "name": "int256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2550:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58497,
+                  "mutability": "mutable",
+                  "name": "timestamp",
+                  "nameLocation": "2583:9:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58499,
+                  "src": "2575:17:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 58496,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2575:7:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2549:44:82"
+            },
+            "scope": 58536,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58509,
+            "nodeType": "FunctionDefinition",
+            "src": "2766:84:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58500,
+              "nodeType": "StructuredDocumentation",
+              "src": "2600:161:82",
+              "text": "@notice Sets `memberAddr`'s ownedUnits to `newUnits`\n @param memberAddr The address of the member\n @param newUnits The new units for the member"
+            },
+            "functionSelector": "bb5ec8f2",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "updateMember",
+            "nameLocation": "2775:12:82",
+            "parameters": {
+              "id": 58505,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58502,
+                  "mutability": "mutable",
+                  "name": "memberAddr",
+                  "nameLocation": "2796:10:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58509,
+                  "src": "2788:18:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58501,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2788:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58504,
+                  "mutability": "mutable",
+                  "name": "newUnits",
+                  "nameLocation": "2816:8:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58509,
+                  "src": "2808:16:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  },
+                  "typeName": {
+                    "id": 58503,
+                    "name": "uint128",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2808:7:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint128",
+                      "typeString": "uint128"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2787:38:82"
+            },
+            "returnParameters": {
+              "id": 58508,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58507,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58509,
+                  "src": "2844:4:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 58506,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2844:4:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2843:6:82"
+            },
+            "scope": 58536,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58517,
+            "nodeType": "FunctionDefinition",
+            "src": "2991:62:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58510,
+              "nodeType": "StructuredDocumentation",
+              "src": "2856:130:82",
+              "text": "@notice Claims the claimable balance for `memberAddr` at `block.timestamp`\n @param memberAddr The address of the member"
+            },
+            "functionSelector": "77329f35",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "claimAll",
+            "nameLocation": "3000:8:82",
+            "parameters": {
+              "id": 58513,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58512,
+                  "mutability": "mutable",
+                  "name": "memberAddr",
+                  "nameLocation": "3017:10:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58517,
+                  "src": "3009:18:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58511,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3009:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3008:20:82"
+            },
+            "returnParameters": {
+              "id": 58516,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58515,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58517,
+                  "src": "3047:4:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 58514,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3047:4:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3046:6:82"
+            },
+            "scope": 58536,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58523,
+            "nodeType": "FunctionDefinition",
+            "src": "3142:44:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58518,
+              "nodeType": "StructuredDocumentation",
+              "src": "3059:78:82",
+              "text": "@notice Claims the claimable balance for `msg.sender` at `block.timestamp`"
+            },
+            "functionSelector": "d1058e59",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "claimAll",
+            "nameLocation": "3151:8:82",
+            "parameters": {
+              "id": 58519,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3159:2:82"
+            },
+            "returnParameters": {
+              "id": 58522,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58521,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58523,
+                  "src": "3180:4:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 58520,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3180:4:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3179:6:82"
+            },
+            "scope": 58536,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58535,
+            "nodeType": "FunctionDefinition",
+            "src": "3370:104:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58524,
+              "nodeType": "StructuredDocumentation",
+              "src": "3192:173:82",
+              "text": "@notice Does a claim for `memberAddr` at `time` and handles internal accounting logic\n @dev This is only callable by the GDA and is not to be used by the end user"
+            },
+            "functionSelector": "d877ec87",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "operatorConnectMember",
+            "nameLocation": "3379:21:82",
+            "parameters": {
+              "id": 58531,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58526,
+                  "mutability": "mutable",
+                  "name": "memberAddr",
+                  "nameLocation": "3409:10:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58535,
+                  "src": "3401:18:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58525,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3401:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58528,
+                  "mutability": "mutable",
+                  "name": "doConnect",
+                  "nameLocation": "3426:9:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58535,
+                  "src": "3421:14:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 58527,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3421:4:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58530,
+                  "mutability": "mutable",
+                  "name": "time",
+                  "nameLocation": "3444:4:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58535,
+                  "src": "3437:11:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 58529,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3437:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3400:49:82"
+            },
+            "returnParameters": {
+              "id": 58534,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58533,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58535,
+                  "src": "3468:4:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 58532,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3468:4:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3467:6:82"
+            },
+            "scope": 58536,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ISuperfluidPool",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 58382,
+          "nodeType": "StructuredDocumentation",
+          "src": "131:94:82",
+          "text": " @dev The interface for any super token pool regardless of the distribution schemes."
+        },
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          58536
+        ],
+        "name": "ISuperfluidPool",
+        "nameLocation": "236:15:82",
+        "scope": 58577,
+        "usedErrors": [
+          58384,
+          58386,
+          58388,
+          58390
+        ]
+      },
+      {
+        "id": 58576,
+        "nodeType": "ContractDefinition",
+        "src": "3478:666:82",
+        "nodes": [
+          {
+            "id": 58549,
+            "nodeType": "FunctionDefinition",
+            "src": "3579:111:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58537,
+              "nodeType": "StructuredDocumentation",
+              "src": "3515:59:82",
+              "text": "@notice Returns whether `account` is connected for pool"
+            },
+            "functionSelector": "9e0e0579",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "isMemberConnected",
+            "nameLocation": "3588:17:82",
+            "parameters": {
+              "id": 58545,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58540,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nameLocation": "3623:5:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58549,
+                  "src": "3606:22:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_ISuperfluidToken_$58862",
+                    "typeString": "contract ISuperfluidToken"
+                  },
+                  "typeName": {
+                    "id": 58539,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 58538,
+                      "name": "ISuperfluidToken",
+                      "nameLocations": [
+                        "3606:16:82"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 58862,
+                      "src": "3606:16:82"
+                    },
+                    "referencedDeclaration": 58862,
+                    "src": "3606:16:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_ISuperfluidToken_$58862",
+                      "typeString": "contract ISuperfluidToken"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58542,
+                  "mutability": "mutable",
+                  "name": "pool",
+                  "nameLocation": "3638:4:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58549,
+                  "src": "3630:12:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58541,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3630:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58544,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nameLocation": "3652:7:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58549,
+                  "src": "3644:15:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58543,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3644:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3605:55:82"
+            },
+            "returnParameters": {
+              "id": 58548,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58547,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58549,
+                  "src": "3684:4:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 58546,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3684:4:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3683:6:82"
+            },
+            "scope": 58576,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58562,
+            "nodeType": "FunctionDefinition",
+            "src": "3756:157:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58550,
+              "nodeType": "StructuredDocumentation",
+              "src": "3696:55:82",
+              "text": "@notice Returns the adjustment flow info for `pool`"
+            },
+            "functionSelector": "37bd42e0",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getPoolAdjustmentFlowInfo",
+            "nameLocation": "3765:25:82",
+            "parameters": {
+              "id": 58554,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58553,
+                  "mutability": "mutable",
+                  "name": "pool",
+                  "nameLocation": "3807:4:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58562,
+                  "src": "3791:20:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_ISuperfluidPool_$58536",
+                    "typeString": "contract ISuperfluidPool"
+                  },
+                  "typeName": {
+                    "id": 58552,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 58551,
+                      "name": "ISuperfluidPool",
+                      "nameLocations": [
+                        "3791:15:82"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 58536,
+                      "src": "3791:15:82"
+                    },
+                    "referencedDeclaration": 58536,
+                    "src": "3791:15:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_ISuperfluidPool_$58536",
+                      "typeString": "contract ISuperfluidPool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3790:22:82"
+            },
+            "returnParameters": {
+              "id": 58561,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58556,
+                  "mutability": "mutable",
+                  "name": "recipient",
+                  "nameLocation": "3868:9:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58562,
+                  "src": "3860:17:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58555,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3860:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58558,
+                  "mutability": "mutable",
+                  "name": "flowHash",
+                  "nameLocation": "3887:8:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58562,
+                  "src": "3879:16:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 58557,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3879:7:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58560,
+                  "mutability": "mutable",
+                  "name": "flowRate",
+                  "nameLocation": "3903:8:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58562,
+                  "src": "3897:14:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int96",
+                    "typeString": "int96"
+                  },
+                  "typeName": {
+                    "id": 58559,
+                    "name": "int96",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3897:5:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int96",
+                      "typeString": "int96"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3859:53:82"
+            },
+            "scope": 58576,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 58575,
+            "nodeType": "FunctionDefinition",
+            "src": "4009:133:82",
+            "nodes": [],
+            "documentation": {
+              "id": 58563,
+              "nodeType": "StructuredDocumentation",
+              "src": "3919:85:82",
+              "text": "@notice Handles a settle claim and is called when someone calls claim on the pool"
+            },
+            "functionSelector": "4543b745",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "poolSettleClaim",
+            "nameLocation": "4018:15:82",
+            "parameters": {
+              "id": 58571,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58566,
+                  "mutability": "mutable",
+                  "name": "superToken",
+                  "nameLocation": "4051:10:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58575,
+                  "src": "4034:27:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_ISuperfluidToken_$58862",
+                    "typeString": "contract ISuperfluidToken"
+                  },
+                  "typeName": {
+                    "id": 58565,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 58564,
+                      "name": "ISuperfluidToken",
+                      "nameLocations": [
+                        "4034:16:82"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 58862,
+                      "src": "4034:16:82"
+                    },
+                    "referencedDeclaration": 58862,
+                    "src": "4034:16:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_ISuperfluidToken_$58862",
+                      "typeString": "contract ISuperfluidToken"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58568,
+                  "mutability": "mutable",
+                  "name": "claimRecipient",
+                  "nameLocation": "4071:14:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58575,
+                  "src": "4063:22:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 58567,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4063:7:82",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58570,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "4094:6:82",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58575,
+                  "src": "4087:13:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int256",
+                    "typeString": "int256"
+                  },
+                  "typeName": {
+                    "id": 58569,
+                    "name": "int256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4087:6:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4033:68:82"
+            },
+            "returnParameters": {
+              "id": 58574,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 58573,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 58575,
+                  "src": "4136:4:82",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 58572,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4136:4:82",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4135:6:82"
+            },
+            "scope": 58576,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ISuperfluidPoolAdmin",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          58576
+        ],
+        "name": "ISuperfluidPoolAdmin",
+        "nameLocation": "3488:20:82",
+        "scope": 58577,
+        "usedErrors": []
+      }
+    ],
+    "license": "AGPLv3"
+  },
+  "id": 82
+}

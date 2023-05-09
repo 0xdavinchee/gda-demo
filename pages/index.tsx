@@ -5,17 +5,17 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useAccount } from "wagmi";
 import {
-  superfluidABI,
-  superTokenPoolABI,
+  superfluidPoolABI,
+  useGdAv1GetFlowDistributionActualFlowRate,
   useGdAv1IsMemberConnected,
   usePrepareSuperfluidCallAgreement,
-  usePrepareSuperTokenPoolClaimAll,
-  usePrepareSuperTokenPoolUpdateMember,
+  usePrepareSuperfluidPoolClaimAll,
+  usePrepareSuperfluidPoolUpdateMember,
   useSuperfluidCallAgreement,
-  useSuperTokenPoolAdmin,
-  useSuperTokenPoolClaimAll,
-  useSuperTokenPoolSuperToken,
-  useSuperTokenPoolUpdateMember,
+  useSuperfluidPoolAdmin,
+  useSuperfluidPoolClaimAll,
+  useSuperfluidPoolSuperToken,
+  useSuperfluidPoolUpdateMember,
 } from "../src/generated";
 import { BigNumber, ethers } from "ethers";
 import {
@@ -28,11 +28,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Interface } from "@ethersproject/abi";
 import EntryPoint from "../component/EntryPoint";
 import TabPanel from "../component/TabPanel";
-import { gdaContract } from "../src/constants";
+import { gdaContract, superfluidContract } from "../src/constants";
 import PoolInfoCard from "../component/PoolInfo";
 
 enum LocalStorage {
@@ -45,10 +45,6 @@ enum TabType {
   Member,
 }
 
-const superfluidContract = {
-  superfluidABI,
-  address: "0x61df7e94415b632d191bcd2106645ce8aeb38e33" as any,
-};
 const GDA_INTERFACE = new Interface([
   "function connectPool(address,bytes calldata) returns(bytes memory)",
   "function disconnectPool(address,bytes calldata) returns(bytes memory)",
@@ -77,45 +73,51 @@ const Home: NextPage = () => {
   const [currentPool, setCurrentPool] = useState("");
 
   const poolContract = {
-    superTokenPoolABI,
+    superfluidPoolABI,
     address: currentPool as any,
   };
+
+  const hasValidPoolAddress = useMemo(
+    () => ethers.utils.isAddress(currentPool),
+    [currentPool]
+  );
 
   // HOOKS
   // REACT HOOKS
   useEffect(() => {
-    const localStorageExistingPools = localStorage.getItem(
-      LocalStorage.ExistingPools
+    const localStorageExistingPools = JSON.parse(
+      localStorage.getItem(LocalStorage.ExistingPools) || "[]"
     );
-    if (localStorageExistingPools) {
-      setExistingPools(JSON.parse(localStorageExistingPools));
+    if (localStorageExistingPools.length > 0) {
+      setExistingPools(localStorageExistingPools);
     }
   }, []);
 
   useEffect(() => {
-    if (!existingPools.includes(currentPool)) {
-      setExistingPools([...existingPools, currentPool]);
+    if (!existingPools.includes(currentPool) && currentPool !== "") {
+      const newExistingPools = [...existingPools, currentPool];
+      setExistingPools(newExistingPools);
       localStorage.setItem(
         LocalStorage.ExistingPools,
-        JSON.stringify(existingPools)
+        JSON.stringify(newExistingPools)
       );
     }
   }, [currentPool, existingPools]);
 
   // READ HOOKS
-  // SUPERTOKENPOOL
+  // SUPERfluidPOOL
   const { data: poolAdmin, isFetchedAfterMount: poolAdminLoaded } =
-    useSuperTokenPoolAdmin({
+    useSuperfluidPoolAdmin({
       ...poolContract,
-      enabled: ethers.utils.isAddress(currentPool),
+      enabled: hasValidPoolAddress,
     });
 
   const {
     data: superTokenAddress,
     isFetchedAfterMount: superTokenAddressLoaded,
-  } = useSuperTokenPoolSuperToken({
+  } = useSuperfluidPoolSuperToken({
     ...poolContract,
-    enabled: ethers.utils.isAddress(currentPool),
+    enabled: hasValidPoolAddress,
   });
 
   const {
@@ -125,30 +127,49 @@ const Home: NextPage = () => {
     ...gdaContract,
     args: [superTokenAddress as any, poolContract.address, address as any],
     watch: true,
-    enabled: address != null,
+    enabled: address != null && hasValidPoolAddress,
+  });
+
+  const {
+    data: flowDistributionActualFlowRate,
+    isFetchedAfterMount: flowDistributionActualFlowRateLoaded,
+  } = useGdAv1GetFlowDistributionActualFlowRate({
+    ...gdaContract,
+    args: [
+      superTokenAddress as any,
+      address as any,
+      poolContract.address,
+      ethers.BigNumber.from(distributionFlowRate || "0"),
+    ],
+    watch: true,
+    enabled:
+      superTokenAddress != null &&
+      address != null &&
+      hasValidPoolAddress &&
+      distributionFlowRate !== "",
   });
 
   // WRITE HOOKS
   // Call Agreement Write Hook
 
   // SUPERTOKEN POOL
-  const { config: updateMemberConfig } = usePrepareSuperTokenPoolUpdateMember({
+  const { config: updateMemberConfig } = usePrepareSuperfluidPoolUpdateMember({
     ...poolContract,
     args: [memberAddress as any, BigNumber.from(memberUnits || "0")],
     enabled:
-      currentPool !== "" &&
+      ethers.utils.isAddress(currentPool) &&
       ethers.utils.isAddress(memberAddress) &&
       memberUnits !== "",
   });
   const { writeAsync: updateMemberWrite } =
-    useSuperTokenPoolUpdateMember(updateMemberConfig);
+    useSuperfluidPoolUpdateMember(updateMemberConfig);
 
-  const { config: claimAllConfig } = usePrepareSuperTokenPoolClaimAll({
+  const { config: claimAllConfig } = usePrepareSuperfluidPoolClaimAll({
     ...poolContract,
     enabled: currentPool !== "",
   });
   const { writeAsync: claimAllWrite } =
-    useSuperTokenPoolClaimAll(claimAllConfig);
+    useSuperfluidPoolClaimAll(claimAllConfig);
 
   // SUPERFLUID
   const { config: distributeConfig } = usePrepareSuperfluidCallAgreement({
@@ -168,7 +189,7 @@ const Home: NextPage = () => {
     ],
     enabled:
       currentPool !== "" &&
-      !ethers.utils.isAddress(superTokenAddress as any) &&
+      ethers.utils.isAddress(superTokenAddress as any) &&
       distributionAmount !== "",
   });
   const { writeAsync: distributeWrite } =
@@ -190,7 +211,7 @@ const Home: NextPage = () => {
     ],
     enabled:
       currentPool !== "" &&
-      !ethers.utils.isAddress(superTokenAddress as any) &&
+      ethers.utils.isAddress(superTokenAddress as any) &&
       distributionFlowRate !== "",
   });
   const { writeAsync: distributeFlowWrite } =
@@ -229,6 +250,7 @@ const Home: NextPage = () => {
   });
   const { writeAsync: disconnectPoolWrite } =
     useSuperfluidCallAgreement(disconnectPoolConfig);
+
   return (
     <Paper>
       <Head>
@@ -329,9 +351,7 @@ const Home: NextPage = () => {
                 />
                 <Button
                   variant="contained"
-                  disabled={
-                    !ethers.utils.isAddress(memberAddress) || memberUnits === ""
-                  }
+                  disabled={Number(distributionAmount) === 0}
                   onClick={() => tryCatchWrapper(distributeWrite)}
                 >
                   Distribute
@@ -346,16 +366,20 @@ const Home: NextPage = () => {
               >
                 <Typography variant="body1">Flow Distribution</Typography>
                 <TextField
-                  style={{ marginBottom: 10 }}
+                  style={{ marginBottom: 10, marginTop: 10 }}
                   value={distributionFlowRate}
                   label="Requested Distribution Flow Rate"
                   onChange={(e) => setDistributionFlowRate(e.target.value)}
                 />
+                <Typography variant="caption" style={{ marginBottom: 5}}>
+                  Actual Distribution Flow Rate:{" "}
+                  {flowDistributionActualFlowRateLoaded &&
+                    flowDistributionActualFlowRate ?
+                    flowDistributionActualFlowRate.toString() : "n/a"}
+                </Typography>
                 <Button
                   variant="contained"
-                  disabled={
-                    !ethers.utils.isAddress(memberAddress) || memberUnits === ""
-                  }
+                  disabled={Number(distributionFlowRate) === 0}
                   onClick={() => tryCatchWrapper(distributeFlowWrite)}
                 >
                   Distribute Flow
@@ -376,7 +400,10 @@ const Home: NextPage = () => {
                 {isMemberConnectedLoaded && isMemberConnected && (
                   <>
                     <Typography variant="body1">Claim Units</Typography>
-                    <Button variant="contained" onClick={() => tryCatchWrapper(claimAllWrite)}>
+                    <Button
+                      variant="contained"
+                      onClick={() => tryCatchWrapper(claimAllWrite)}
+                    >
                       Claim
                     </Button>
                     <Button

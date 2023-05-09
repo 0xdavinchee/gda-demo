@@ -4,19 +4,13 @@ import { ThemeProvider } from '@mui/material/styles';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import type { AppProps } from 'next/app';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { arbitrum, foundry, goerli, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
+import { avalancheFuji } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import theme from '../src/theme';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    foundry,
-    goerli,
-    polygonMumbai
+    avalancheFuji
   ],
   [publicProvider()]
 );
