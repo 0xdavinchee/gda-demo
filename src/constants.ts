@@ -2,10 +2,10 @@ import { gdAv1ABI, superfluidABI } from "./generated";
 
 export const gdaContract = {
   gdAv1ABI,
-  address: "0xB7274f75B1f16f8020A66A804b73c92C0b4c089d" as any,
+  address: "0x51f571D934C59185f13d17301a36c07A2268B814" as any,
 };
 
 export const superfluidContract = {
   superfluidABI,
-  address: "0x767E82354DfCc9E811475E1A7394fdBCd8730bCC" as any,
+  address: "0xf04F2C525819691ed9ABD3D2B7109E1633795e68" as any,
 };
