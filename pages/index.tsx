@@ -6,7 +6,7 @@ import styles from "../styles/Home.module.css";
 import { useAccount } from "wagmi";
 import {
   superfluidPoolABI,
-  useGdAv1GetFlowDistributionActualFlowRate,
+  useGdAv1EstimateFlowDistributionActualFlowRate,
   useGdAv1IsMemberConnected,
   usePrepareSuperfluidCallAgreement,
   usePrepareSuperfluidPoolClaimAll,
@@ -133,7 +133,7 @@ const Home: NextPage = () => {
   const {
     data: flowDistributionActualFlowRate,
     isFetchedAfterMount: flowDistributionActualFlowRateLoaded,
-  } = useGdAv1GetFlowDistributionActualFlowRate({
+  } = useGdAv1EstimateFlowDistributionActualFlowRate({
     ...gdaContract,
     args: [
       superTokenAddress as any,
